@@ -1,5 +1,7 @@
-﻿using System;
+﻿using prjMvcDemo.Models;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -8,14 +10,129 @@ namespace prjMvcDemo.Controllers
 {
     public class AController : Controller
     {
+        public string TestingInsert()
+        {
+            Customer customer = new Customer()
+            {
+                fName = "Tom",
+                fPhone = "0988777666",
+                fAddress = "KH",
+                fEmail = "tom@gmail.com",
+                fPassword = "1234",
+            };
+
+            new CustomerFactory().Create(customer);
+            return "資料新增成功";
+        }
+
+
+        public ActionResult BindingById(int? id)
+        {
+            Customer customer = null;
+
+            if (id == null)
+            {
+                return View(customer);
+            }
+
+            using (var sqlConn = new SqlConnection())
+            {
+                sqlConn.ConnectionString = "Data Source=P215-2203-NB01;Initial Catalog=dbDemo;Integrated Security=True";
+
+                using (var cmd = sqlConn.CreateCommand())
+                {
+                    sqlConn.Open();
+                    cmd.CommandText = "SELECT * FROM tCustomer WHERE fid=" + id.ToString();
+
+                    SqlDataReader reader = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+                    if (reader.Read())
+                    {
+                        customer = new Customer()
+                        {
+                            fId = (int)reader["fId"],
+                            fName = reader["fName"].ToString(),
+                            fPhone = reader["fPhone"].ToString(),
+                        };
+                    }
+
+                    return View(customer);
+                }
+            }
+        }
+
+
+        public ActionResult ShowById(int? id)
+        {
+            if (id == null)
+            {
+                return View();
+            }
+
+            using (var sqlConn = new SqlConnection())
+            {
+                sqlConn.ConnectionString = "Data Source=P215-2203-NB01;Initial Catalog=dbDemo;Integrated Security=True";
+
+                using (var cmd = sqlConn.CreateCommand())
+                {
+                    sqlConn.Open();
+                    cmd.CommandText = "SELECT * FROM tCustomer WHERE fid=" + id.ToString();
+
+                    SqlDataReader reader = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+                    if (reader.Read())
+                    {
+                        Customer customer = new Customer()
+                        {
+                            fId = (int)reader["fId"],
+                            fName = reader["fName"].ToString(),
+                            fPhone = reader["fPhone"].ToString(),
+                        };
+
+                        ViewBag.Customer = customer;
+                    }
+
+                    return View();
+                }
+            }
+        }
+
+
+        public string QueryById(int? id)
+        {
+            if (id == null) return "沒有指定id";
+
+            using (var sqlConn = new SqlConnection())
+            {
+                sqlConn.ConnectionString = "Data Source=P215-2203-NB01;Initial Catalog=dbDemo;Integrated Security=True";
+                
+                using (var cmd = sqlConn.CreateCommand())
+                {
+                    sqlConn.Open();
+                    cmd.CommandText = "SELECT * FROM tCustomer WHERE fid=" + id.ToString();
+
+                    string queryResult = "查無任何資料";
+
+                    SqlDataReader reader = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+                    if (reader.Read())
+                    {
+                        queryResult = reader["fName"].ToString() + "<br/>" + reader["fPhone"].ToString();
+                    }
+
+                    return queryResult;
+                }
+            }
+        }
+
+
         public string demoServer()
         {
             return "目前伺服器上的實體位置：" + Server.MapPath(".");
         }
 
 
-        public string demoParameter(int id)
+        public string demoParameter(int? id)
         {
+            if (id == null) return "沒有指定id";
+
             if (id == 0) return "XBox 加入購物車成功";
             else if (id == 1) return "PS5 加入購物車成功";
             return "找不到該產品資料";
