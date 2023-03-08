@@ -10,6 +10,20 @@ namespace prjMvcDemo.Controllers
 {
     public class AController : Controller
     {
+        // undone
+        public ActionResult DemoForm()
+        {
+            ViewBag.ANS = "?";
+            if (String.IsNullOrEmpty(Request.Form["txtA"]) == false)
+            {
+                double a = Convert.ToDouble(Request.Form["txtA"]);
+                double b = Convert.ToDouble(Request.Form["txtB"]);
+                ViewBag.ANS = (a + b).ToString();
+            }
+            return View();
+        }
+
+
         public string TestingQuery()
         {
             //Customer customer = new CustomerFactory().QueryById(id);

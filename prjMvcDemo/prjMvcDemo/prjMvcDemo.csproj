@@ -112,6 +112,9 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\A\ShowById.cshtml" />
     <Content Include="Views\A\BindingById.cshtml" />
+    <Content Include="Views\Customer\List.cshtml" />
+    <Content Include="Views\A\DemoForm.cshtml" />
+    <Content Include="Views\Customer\Create.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
