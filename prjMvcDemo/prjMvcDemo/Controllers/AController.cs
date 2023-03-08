@@ -10,19 +10,6 @@ namespace prjMvcDemo.Controllers
 {
     public class AController : Controller
     {
-        public string TestingQuery()
-        {
-            //Customer customer = new CustomerFactory().QueryById(id);
-            //return customer.fId + "<br/>" + customer.fName;
-
-            string result = String.Empty;
-
-            List<Customer> customers = new CustomerFactory().QueryAll();
-            customers.ForEach(c => result += $"{c.fId}: {c.fName}<br/>");
-
-            return result;
-        }
-
         public string TestingInsert()
         {
             Customer customer = new Customer()
