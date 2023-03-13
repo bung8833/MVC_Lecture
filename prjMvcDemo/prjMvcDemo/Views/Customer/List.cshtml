@@ -5,6 +5,14 @@
 }
 
 <h2>客戶資料一覽表</h2>
+<a href="~/Customer/create">新增客戶</a>
+<p>
+    @using (Html.BeginForm())
+    {
+        @:關鍵字 @Html.TextBox("txtKeyword") <input type="submit" value="查詢" />
+    }
+</p>
+
 <p>
     <table border="1">
         <tr>
@@ -16,9 +24,9 @@
             <td>編輯</td>
             <td>刪除</td>
         </tr>
-        @{ 
+        @{
             int count = 0;
-            foreach(Customer customer in Model)
+            foreach (Customer customer in Model)
             {
                 count++;
                 <tr>
@@ -27,13 +35,13 @@
                     <td>@customer.fPhone</td>
                     <td>@customer.fEmail</td>
                     <td>@customer.fAddress</td>
+                    <td>@Html.ActionLink("編輯", "Edit", "Customer", new { id = @customer.fId })</td>
                     <td>
-
-                    </td>
-                    <td>@Html.ActionLink("刪除", "Delete", "Customer", new { id=@customer.fId },
-                       new { onclick="return confirm('確定要刪除嗎？')" })</td>
-                </tr>
-            }
+                        @Html.ActionLink("刪除", "Delete", "Customer", new { id = @customer.fId },
+                   new { onclick = "return confirm('確定要刪除嗎？')" })
+                </td>
+            </tr>
+        }
         }
     </table>
 </p>

@@ -11,6 +11,30 @@ namespace prjMvcDemo.Controllers
 {
     public class CustomerController : Controller
     {
+
+
+        //------------------------------//
+        //------------------------------//
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+                return RedirectToAction("List");
+
+            Customer x = (new CustomerFactory()).QueryById((int)id);
+            if (x == null)
+                return RedirectToAction("List");
+
+            return View(x);
+        }
+        [HttpPost]
+        public ActionResult Edit(Customer x)
+        {
+            (new CustomerFactory()).update(x);
+            return RedirectToAction("List");
+        }
+        //------------------------------//
+        //------------------------------//
+
         public ActionResult Delete(int? id)
         {
             if (id == null) return View();
@@ -43,7 +67,18 @@ namespace prjMvcDemo.Controllers
 
         public ActionResult List()
         {
-            List<Customer> customers = new CustomerFactory().QueryAll();
+            string keyword = Request.Form["txtKeyword"];
+            List<Customer> customers = null;
+
+            if (String.IsNullOrEmpty(keyword))
+            {
+                customers = new CustomerFactory().QueryAll();
+            }
+            else
+            {
+                customers = new CustomerFactory().QueryByKeyword(keyword);
+            }
+
             return View(customers);
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI.WebControls;
 
@@ -31,11 +32,27 @@ namespace prjMvcDemo.Models
             parameters.Add(new SqlParameter("K_FID", fId));
 
             List<Customer> customers = QueryBySql(sql, parameters);
-            if (customers == null)
+            if (customers == null || customers.Count == 0)
             {
                 return null;
             }
             return customers.Single();
+        }
+
+
+        public List<Customer> QueryByKeyword(string keyword)
+        {
+            string sql = $@"SELECT * FROM {_tableName} WHERE 
+fName LIKE @K_KEYWORD
+OR fPhone LIKE @K_KEYWORD
+OR fEmail LIKE @K_KEYWORD
+OR fAddress LIKE @K_KEYWORD";
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("K_KEYWORD", "%" + keyword + "%"));
+
+            List<Customer> customers = QueryBySql(sql, parameters);
+            return customers;
         }
 
 
@@ -49,7 +66,9 @@ namespace prjMvcDemo.Models
             ExecuteSql(sql, parameters);
         }
 
-
+        //----------------------------------------------------------//
+        //----------------------------------------------------------//
+        //----------------------------------------------------------//
         public void Create(Customer p)
         {
             string sql = $@"INSERT INTO {_tableName} (
@@ -67,7 +86,88 @@ VALUES(
 
             ExecuteSql(sql, parameters);
         }
-
+        public void create(Customer p)
+        {
+            List<SqlParameter> paras = new List<SqlParameter>();
+            string sql = "INSERT INTO tCustomer (";
+            if (!string.IsNullOrEmpty(p.fName))
+                sql += " fName, ";
+            if (!string.IsNullOrEmpty(p.fPhone))
+                sql += " fPhone, ";
+            if (!string.IsNullOrEmpty(p.fEmail))
+                sql += " fEmail, ";
+            if (!string.IsNullOrEmpty(p.fAddress))
+                sql += " fAddress, ";
+            if (!string.IsNullOrEmpty(p.fPassword))
+                sql += " fPassword,";
+            if (sql.Trim().Substring(sql.Trim().Length - 1, 1) == ",")
+                sql = sql.Trim().Substring(0, sql.Trim().Length - 1);
+            sql += " )VALUES( ";
+            if (!string.IsNullOrEmpty(p.fName))
+            {
+                sql += " @K_FNAME, ";
+                paras.Add(new SqlParameter("K_FNAME", (object)p.fName));
+            }
+            if (!string.IsNullOrEmpty(p.fPhone))
+            {
+                sql += " @K_FPHONE, ";
+                paras.Add(new SqlParameter("K_FPHONE", (object)p.fPhone));
+            }
+            if (!string.IsNullOrEmpty(p.fEmail))
+            {
+                sql += " @K_FEMAIL, ";
+                paras.Add(new SqlParameter("K_FEMAIL", (object)p.fEmail));
+            }
+            if (!string.IsNullOrEmpty(p.fAddress))
+            {
+                sql += " @K_FADDRESS, ";
+                paras.Add(new SqlParameter("K_FADDRESS", (object)p.fAddress));
+            }
+            if (!string.IsNullOrEmpty(p.fPassword))
+            {
+                sql += " @K_FPASSWORD, ";
+                paras.Add(new SqlParameter("K_FPASSWORD", (object)p.fPassword));
+            }
+            if (sql.Trim().Substring(sql.Trim().Length - 1, 1) == ",")
+                sql = sql.Trim().Substring(0, sql.Trim().Length - 1);
+            sql += ")";
+            ExecuteSql(sql, paras);
+        }
+        public void update(Customer p)
+        {
+            List<SqlParameter> paras = new List<SqlParameter>();
+            string sql = "UPDATE tCustomer SET ";
+            if (!string.IsNullOrEmpty(p.fName))
+            {
+                sql += " fName=@K_FNAME,";
+                paras.Add(new SqlParameter("K_FNAME", (object)p.fName));
+            }
+            if (!string.IsNullOrEmpty(p.fPhone))
+            {
+                sql += " fPhone=@K_FPHONE,";
+                paras.Add(new SqlParameter("K_FPHONE", (object)p.fPhone));
+            }
+            if (!string.IsNullOrEmpty(p.fEmail))
+            {
+                sql += " fEmail=@K_FEMAIL,";
+                paras.Add(new SqlParameter("K_FEMAIL", (object)p.fEmail));
+            }
+            if (!string.IsNullOrEmpty(p.fAddress))
+            {
+                sql += " fAddress=@K_FADDRESS,";
+                paras.Add(new SqlParameter("K_FADDRESS", (object)p.fAddress));
+            }
+            if (!string.IsNullOrEmpty(p.fPassword))
+            {
+                sql += " fPASSWORD=@K_FPASSWORD,";
+                paras.Add(new SqlParameter("K_FPASSWORD", (object)p.fPassword));
+            }
+            if (sql.Trim().Substring(sql.Trim().Length - 1, 1) == ",")
+                sql = sql.Trim().Substring(0, sql.Trim().Length - 1);
+            sql += " WHERE fId=@K_FID";
+            paras.Add(new SqlParameter("K_FID", (object)p.fId));
+            ExecuteSql(sql, paras);
+        }
 
         //----------------------------------------------------------//
         //----------------------------------------------------------//
