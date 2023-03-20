@@ -1,4 +1,5 @@
-﻿using prjMvcDemo.ViewModels;
+﻿using prjMvcDemo.Models;
+using prjMvcDemo.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,12 @@ namespace prjMvcDemo.Controllers
 {
     public class ShoppingController : Controller
     {
+        public ActionResult CartView()
+        {
+            List<ShoppingCartItem> cart = Session["SK_CART_ITEM_LIST"] as List<ShoppingCartItem>;
+
+        }
+
         // GET: Shopping
         public ActionResult List()
         {
@@ -36,14 +43,19 @@ namespace prjMvcDemo.Controllers
             tProduct prod = db.tProduct.FirstOrDefault(p => p.fId == vm.txtFId);
             if (prod != null)
             {
-                tShoppingCart x = new tShoppingCart();
-                x.fDate = DateTime.Now.ToString("yyyyMMddHHmmss");
-                x.fCustomerId = 1;
-                x.fProductId = vm.txtFId;
-                x.fCount = vm.txtCount;
-                x.fPrice = prod.fPrice;
-                db.tShoppingCart.Add(x);
-                db.SaveChanges();
+                List<ShoppingCartItem> cartItems = Session["SK_CART_ITEM_LIST"] as List<ShoppingCartItem>;
+                if (cartItems == null)
+                {
+                    cartItems = new List<ShoppingCartItem>();
+                    Session["SK_CART_ITEM_LIST"] = cartItems;
+                }
+                ShoppingCartItem item = new ShoppingCartItem()
+                {
+                    productId = vm.txtFId,
+                    count = vm.txtCount,
+                    price = (decimal)prod.fPrice,
+                };
+                cartItems.Add(item);
             }
             return RedirectToAction("List");
         }

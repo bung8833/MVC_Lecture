@@ -5,11 +5,52 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace prjMvcDemo.Controllers
 {
     public class AController : Controller
     {
+        public ActionResult showCountByCookie()
+        {
+            int count = 0;
+            // 取得 Cookie: Request
+            HttpCookie c = Request.Cookies["COUNT"];
+            if (c != null)
+            {
+                count = Convert.ToInt32(c.Value);
+            }
+            count++;
+
+            // 給 Cookie: Response
+            c = new HttpCookie("COUNT");
+            c.Value = count.ToString();
+            c.Expires = DateTime.Now.AddSeconds(20);
+            Response.Cookies.Add(c);
+
+            ViewBag.count = count;
+            return View();
+        }
+
+
+        public ActionResult showCountBySession()
+        {
+            int count = 0;
+            if (Session["count"] != null)
+            {
+                count = (int)Session["count"];
+            }
+            count++;
+
+            // 紀錄
+            Session["count"] = count;
+            // 傳值
+            ViewBag.Count = count;
+
+            return View();
+        }
+
+
         // undone
         public ActionResult DemoForm()
         {
