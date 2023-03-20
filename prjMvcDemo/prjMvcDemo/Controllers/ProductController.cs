@@ -81,7 +81,7 @@ namespace prjMvcDemo.Controllers
         public ActionResult Edit(tProduct pIn)
         {
             dbDemoEntities db = new dbDemoEntities();
-            tProduct prod = db.tProduct.FirstOrDefault(p => p.fId == id);
+            tProduct prod = db.tProduct.FirstOrDefault(p => p.fId == pIn.fId);
             if (prod != null)
             {
                 prod.fName = pIn.fName;

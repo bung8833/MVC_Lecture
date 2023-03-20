@@ -12,9 +12,8 @@ namespace prjMvcDemo.Controllers
         // GET: Shopping
         public ActionResult List()
         {
-            IEnumerable<tShoppingCart> products = 
-                from p in new dbDemoEntities().tShoppingCart
-                select p;
+            var products = from p in (new dbDemoEntities()).tProduct
+                           select p;
 
             return View(products);
         }
@@ -33,7 +32,20 @@ namespace prjMvcDemo.Controllers
         [HttpPost]
         public ActionResult AddToCart(AddToCartVM vm)
         {
-            
+            dbDemoEntities db = new dbDemoEntities();
+            tProduct prod = db.tProduct.FirstOrDefault(p => p.fId == vm.txtFId);
+            if (prod != null)
+            {
+                tShoppingCart x = new tShoppingCart();
+                x.fDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+                x.fCustomerId = 1;
+                x.fProductId = vm.txtFId;
+                x.fCount = vm.txtCount;
+                x.fPrice = prod.fPrice;
+                db.tShoppingCart.Add(x);
+                db.SaveChanges();
+            }
+            return RedirectToAction("List");
         }
     }
 }

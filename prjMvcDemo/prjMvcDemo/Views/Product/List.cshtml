@@ -4,7 +4,7 @@
     ViewBag.Title = "List";
 }
 
-<h2>List</h2>
+<h2>產品資料一覽表</h2>
 
 <p>
     @Html.ActionLink("新增產品", "Create", "Product")
@@ -54,7 +54,8 @@
         </td>
         <td>
             @Html.ActionLink("編輯", "Edit", new { id=item.fId }) |
-            @Html.ActionLink("刪除", "Delete", "Product", new { id=item.fId })
+            @Html.ActionLink("刪除", "Delete", "Product", new { id=item.fId },
+           new { onclick = "return confirm('確定要刪除嗎?')" })
         </td>
     </tr>
 }
