@@ -13,7 +13,9 @@ namespace prjMvcDemo.Controllers
         public ActionResult CartView()
         {
             List<ShoppingCartItem> cart = Session["SK_CART_ITEM_LIST"] as List<ShoppingCartItem>;
+            // todo
 
+            return View();
         }
 
         // GET: Shopping

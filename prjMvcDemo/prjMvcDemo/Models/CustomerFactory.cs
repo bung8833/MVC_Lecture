@@ -40,6 +40,22 @@ namespace prjMvcDemo.Models
         }
 
 
+        public Customer QueryByEmail(string email)
+        {
+            string sql = $"SELECT * FROM {_tableName} WHERE fEmail=@K_FEMAIL";
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("K_FEMAIL", email));
+
+            List<Customer> customers = QueryBySql(sql, parameters);
+            if (customers == null || customers.Count == 0)
+            {
+                return null;
+            }
+            return customers.Single();
+        }
+
+
         public List<Customer> QueryByKeyword(string keyword)
         {
             string sql = $@"SELECT * FROM {_tableName} WHERE 
@@ -250,6 +266,7 @@ VALUES(
 
             return customers;
         }
+
 
         // end of class CustomerFactory
     }

@@ -35,10 +35,11 @@
                     <td>@customer.fPhone</td>
                     <td>@customer.fEmail</td>
                     <td>@customer.fAddress</td>
-                    <td>@Html.ActionLink("編輯", "Edit", "Customer", new { id = @customer.fId })</td>
+                    <td>@Html.ActionLink("編輯", "Edit", "Customer", new { id = @customer.fId },
+                       new { /*@class = "btn btn-success"*/ })</td>
                     <td>
                         @Html.ActionLink("刪除", "Delete", "Customer", new { id = @customer.fId },
-                   new { onclick = "return confirm('確定要刪除嗎？')" })
+                   new { onclick = "return confirm('確定要刪除嗎？')"/*, Class = "btn btn-danger"*/ })
                 </td>
             </tr>
         }
