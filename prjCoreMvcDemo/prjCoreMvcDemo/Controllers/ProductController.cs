@@ -5,7 +5,7 @@ using prjCoreMvcDemo.ViewModels;
 
 namespace prjCoreMvcDemo.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController : SuperController
     {
         public IActionResult List(QueryKeywordVM vm)
         {

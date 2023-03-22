@@ -3,7 +3,7 @@ using prjCoreMvcDemo.Models;
 
 namespace prjCoreMvcDemo.Controllers
 {
-    public class CustomerController : Controller
+    public class CustomerController : SuperController
     {
         IWebHostEnvironment _envir;
         CustomerController(IWebHostEnvironment p)
