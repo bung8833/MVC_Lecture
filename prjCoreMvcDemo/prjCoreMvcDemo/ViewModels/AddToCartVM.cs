@@ -2,6 +2,7 @@
 {
     public class AddToCartVM
     {
-        // todo
+        public int txtFId { get; set; }
+        public int txtCount { get; set; }
     }
 }

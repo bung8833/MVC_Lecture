@@ -11,9 +11,18 @@ namespace prjCoreMvcDemo.Controllers
     {
         // GET: api/<GameQueryServiceController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<TProduct> Get()
         {
             var datas = new dbDemoContext().TProducts.Select(p => p);
+
+            foreach (var d in datas)
+            {
+                d.FCost = 0;
+                if (d.FQty > 0)
+                {
+                    d.FQty = 100;
+                }
+            }
 
             return datas;
         }

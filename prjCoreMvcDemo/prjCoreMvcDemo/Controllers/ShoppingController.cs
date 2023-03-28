@@ -55,8 +55,6 @@ namespace prjCoreMvcDemo.Controllers
         [HttpPost]
         public IActionResult AddToCart(AddToCartVM vm)
         {
-            // undone
-
             dbDemoContext db = new dbDemoContext();
 
             TProduct prod = db.TProducts.FirstOrDefault(p => p.FId == vm.txtFId);
@@ -71,7 +69,7 @@ namespace prjCoreMvcDemo.Controllers
             if (HttpContext.Session.Keys.Contains(SKDictionary.SK_PURCHASED_LIST))
             {
                 json = HttpContext.Session.GetString(SKDictionary.SK_PURCHASED_LIST);
-                cart = JsonConvert.DeserializeObject<List<ShoppingCartItem>>(json);
+                cart = JsonSerializer.Deserialize<List<ShoppingCartItem>>(json);
             }
             else
             {
@@ -79,10 +77,14 @@ namespace prjCoreMvcDemo.Controllers
             }
 
             ShoppingCartItem item = new ShoppingCartItem();
-            // undone
-
-
-            return View();
+            item.Price = (decimal)prod.FPrice;
+            item.ProductId = vm.txtFId;
+            item.Count = vm.txtCount;
+            item.Product = prod;
+            cart.Add(item);
+            json = JsonSerializer.Serialize(cart);
+            HttpContext.Session.SetString(SKDictionary.SK_PURCHASED_LIST, json);
+            return RedirectToAction("List");
         }
     }
 }
